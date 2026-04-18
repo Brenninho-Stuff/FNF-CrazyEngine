@@ -2036,7 +2036,7 @@ class ChartingState extends MusicBeatState
 			#end
 
 			#if mobile
-			if(touchPad.buttonV.justPressed || FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
+			if(touchPad.buttonZ.justPressed || FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
 				undo();
 			}
 			#else
