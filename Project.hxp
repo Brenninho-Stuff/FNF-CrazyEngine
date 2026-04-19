@@ -5,7 +5,7 @@ var project = new Project();
 project.app.title = "Friday Night Funkin': Crazy Engine";
 project.app.file = "CrazyEngine";
 project.app.main = "backend.Main";
-project.app.packageName = "com.brenninho.psychengine";
+project.app.packageName = "com.brenninho.crazyengine";
 project.app.company = "Brenninho";
 project.app.version = "0.1.0";
 
@@ -18,21 +18,42 @@ project.define("LUA_ALLOWED");
 project.define("ACHIEVEMENTS_ALLOWED");
 project.define("PSYCH_WATERMARKS");
 
+if (project.target == "desktop" || project.target == "mobile")
+{
+	project.define("MODS_ALLOWED");
+	project.define("HSCRIPT_ALLOWED");
+	project.define("LUA_ALLOWED");
+}
+
+if (project.target == "desktop")
+	project.define("DISCORD_ALLOWED");
+
+if (project.target != "html5")
+	project.define("VIDEOS_ALLOWED");
+
 project.window.width = 1280;
 project.window.height = 720;
 project.window.background = 0x000000;
 project.window.hardware = true;
 project.window.vsync = false;
 
+if (project.target == "desktop")
+{
+	project.window.resizable = true;
+	project.window.fullscreen = false;
+}
+
 if (project.target == "mobile")
 {
 	project.window.fullscreen = true;
 	project.window.resizable = false;
 	project.window.allowHighDPI = true;
+	project.window.orientation = "landscape";
 }
 
 project.addAssets("assets/fonts");
 project.addAssets("assets/shared");
+
 project.addAssets("assets/songs", "songs");
 project.addAssets("assets/week_assets", "week_assets");
 
@@ -41,42 +62,6 @@ if (project.target == "mobile")
 	project.addAssets("assets/shared/mobile", "mobile");
 }
 
-project.addLibrary("lime", {
-	type: "git",
-	url: "https://github.com/AlafandyPorting/lime-0.7.3",
-	ref: "main"
-});
-
-project.addLibrary("hxcpp", {
-	type: "git",
-	url: "https://github.com/AlafandyPorting/hxcpp",
-	ref: "main"
-});
-
-project.addLibrary("hxCodec", {
-	type: "git",
-	url: "https://github.com/polybiusproxy/hxCodec",
-	ref: "main"
-});
-
-project.addLibrary("SScript", {
-	type: "git",
-	url: "https://github.com/AlafandyPorting/SScript",
-	ref: "main"
-});
-
-project.addLibrary("linc_luajit", {
-	type: "git",
-	url: "https://github.com/AlafandyPorting/linc_luajit-0.7.3",
-	ref: "master"
-});
-
-project.addLibrary("flxanimate", {
-	type: "git",
-	url: "https://github.com/ShadowMario/flxanimate.git",
-	ref: "dev"
-});
-
 project.addLibrary("openfl", "9.3.2");
 project.addLibrary("flixel", "5.5.0");
 project.addLibrary("flixel-addons", "3.2.1");
@@ -84,7 +69,31 @@ project.addLibrary("flixel-tools", "1.5.1");
 project.addLibrary("flixel-ui", "2.5.0");
 project.addLibrary("tjson", "1.4.0");
 
-project.addLibrary("hxdiscord_rpc");
+project.addLibrary("flxanimate");
+
+if (project.hasDefine("LUA_ALLOWED"))
+	project.addLibrary("linc_luajit");
+
+if (project.hasDefine("HSCRIPT_ALLOWED"))
+	project.addLibrary("SScript");
+
+if (project.hasDefine("VIDEOS_ALLOWED"))
+	project.addLibrary("hxCodec");
+
+if (project.hasDefine("DISCORD_ALLOWED"))
+	project.addLibrary("hxdiscord_rpc");
+
+if (!project.debug)
+{
+	project.define("NAPE_RELEASE_BUILD");
+	project.define("FLX_NO_DEBUG");
+}
+
+if (project.debug)
+{
+	project.addLibrary("hxcpp-debug-server");
+	project.define("HXC_DEBUG_TRACE");
+}
 
 if (project.target == "cpp")
 {
@@ -93,12 +102,22 @@ if (project.target == "cpp")
 	project.define("HXCPP_CATCH_SEGV");
 }
 
-if (project.target == "android" && !project.debug)
+if (project.target == "android")
 {
-	project.keystore = "key.keystore";
-	project.keystorePassword = "psychengine";
-	project.keyAlias = "psychport";
-	project.keyAliasPassword = "psychengine";
+	project.define("SHARE_MOBILE_FILES");
+
+	if (!project.debug)
+	{
+		project.keystore = "key.keystore";
+		project.keystorePassword = "psychengine";
+		project.keyAlias = "psychport";
+		project.keyAliasPassword = "psychengine";
+	}
+}
+
+if (project.target == "ios" || project.target == "mac")
+{
+	project.meta.set("category_type", "public.app-category.music-games");
 }
 
 project.addIcon("art/icon16.png", 16);
