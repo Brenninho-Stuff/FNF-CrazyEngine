@@ -20,30 +20,41 @@ on:
         type: string
 
 env:
-  HAXE_VERSION: 4.3.2
-  PROJECT_NAME: PsychEngine
+  HAXE_VERSION: 4.3.7
+  PROJECT_NAME: CrazyEngine
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   build:
-    name: Build
+    name: Build (${{ inputs.name }})
     runs-on: ${{ inputs.os }}
+
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
+      - name: Cache Haxelib
+        uses: actions/cache@v4
+        with:
+          path: ~/.haxelib
+          key: haxelib-${{ runner.os }}-${{ hashFiles('hmm.json') }}
+          restore-keys: |
+            haxelib-${{ runner.os }}-
+
       - name: Install libVLC
         if: inputs.name == 'Linux'
-        run: sudo apt install libvlc-dev libvlccore-dev
+        run: |
+          sudo apt update
+          sudo apt install -y libvlc-dev libvlccore-dev
 
       - name: Setup XCode
         if: inputs.name == 'iOS'
-        uses: maxim-lobanov/setup-xcode@master
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.4'
 
@@ -61,7 +72,8 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
 
       - name: Compile
-        run: haxelib run lime build ${{ inputs.buildArgs }}
+        run: |
+          haxelib run lime build ${{ inputs.buildArgs }}
 
       - name: Make IPA
         if: inputs.name == 'iOS'
@@ -72,7 +84,7 @@ jobs:
           zip -r ${{ env.PROJECT_NAME }}.ipa Payload
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifactName }}
           path: ${{ inputs.artifactPath }}
