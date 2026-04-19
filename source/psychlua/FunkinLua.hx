@@ -68,7 +68,6 @@ class FunkinLua {
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
 
-      MobileLua.addCallbacks(this);
 
 		//trace('Lua version: ' + Lua.version());
 		//trace("LuaJIT version: " + Lua.versionJIT());
@@ -1521,6 +1520,7 @@ class FunkinLua {
 
 		#if mobile
 		MobileFunctions.implement(this);
+      MobileLua.addCallbacks(this);
 		#if android
 		AndroidFunctions.implement(this);
 		#end
