@@ -1,6 +1,4 @@
-import lime.app.Application;
-import lime.graphics.Image;
-import lime.tools.ProjectXMLParser;
+import lime.tools.Project;
 
 var project = new Project();
 
@@ -11,29 +9,14 @@ project.app.packageName = "com.brenninho.psychengine";
 project.app.company = "Brenninho";
 project.app.version = "0.1.0";
 
+project.addSource("source");
+
 project.define("LINC_LUA_RELATIVE_DYNAMIC_LIB");
 project.define("MODS_ALLOWED");
 project.define("HSCRIPT_ALLOWED");
 project.define("LUA_ALLOWED");
 project.define("ACHIEVEMENTS_ALLOWED");
 project.define("PSYCH_WATERMARKS");
-
-if (project.target == "desktop" || project.target == "mobile")
-{
-	project.define("MODS_ALLOWED");
-	project.define("HSCRIPT_ALLOWED");
-	project.define("LUA_ALLOWED");
-}
-
-if (project.target == "desktop")
-{
-	project.define("DISCORD_ALLOWED");
-}
-
-if (project.target != "32bits")
-{
-	project.define("VIDEOS_ALLOWED");
-}
 
 project.window.width = 1280;
 project.window.height = 720;
@@ -48,8 +31,6 @@ if (project.target == "mobile")
 	project.window.allowHighDPI = true;
 }
 
-project.addSource("source");
-
 project.addAssets("assets/fonts");
 project.addAssets("assets/shared");
 project.addAssets("assets/songs", "songs");
@@ -60,23 +41,50 @@ if (project.target == "mobile")
 	project.addAssets("assets/shared/mobile", "mobile");
 }
 
-project.addLibrary("flixel");
-project.addLibrary("flixel-ui");
-project.addLibrary("flixel-addons");
-project.addLibrary("tjson");
-project.addLibrary("flxanimate");
+project.addLibrary("lime", {
+	type: "git",
+	url: "https://github.com/AlafandyPorting/lime-0.7.3",
+	ref: "main"
+});
 
-if (project.hasDefine("LUA_ALLOWED"))
-	project.addLibrary("linc_luajit");
+project.addLibrary("hxcpp", {
+	type: "git",
+	url: "https://github.com/AlafandyPorting/hxcpp",
+	ref: "main"
+});
 
-if (project.hasDefine("HSCRIPT_ALLOWED"))
-	project.addLibrary("SScript");
+project.addLibrary("hxCodec", {
+	type: "git",
+	url: "https://github.com/polybiusproxy/hxCodec",
+	ref: "main"
+});
 
-if (project.hasDefine("VIDEOS_ALLOWED"))
-	project.addLibrary("hxCodec");
+project.addLibrary("SScript", {
+	type: "git",
+	url: "https://github.com/AlafandyPorting/SScript",
+	ref: "main"
+});
 
-if (project.hasDefine("DISCORD_ALLOWED"))
-	project.addLibrary("hxdiscord_rpc");
+project.addLibrary("linc_luajit", {
+	type: "git",
+	url: "https://github.com/AlafandyPorting/linc_luajit-0.7.3",
+	ref: "master"
+});
+
+project.addLibrary("flxanimate", {
+	type: "git",
+	url: "https://github.com/ShadowMario/flxanimate.git",
+	ref: "dev"
+});
+
+project.addLibrary("openfl", "9.3.2");
+project.addLibrary("flixel", "5.5.0");
+project.addLibrary("flixel-addons", "3.2.1");
+project.addLibrary("flixel-tools", "1.5.1");
+project.addLibrary("flixel-ui", "2.5.0");
+project.addLibrary("tjson", "1.4.0");
+
+project.addLibrary("hxdiscord_rpc");
 
 if (project.target == "cpp")
 {
