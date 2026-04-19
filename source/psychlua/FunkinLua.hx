@@ -47,6 +47,7 @@ import haxe.Json;
 
 #if mobile
 import mobile.psychlua.Functions;
+import psychlua.mobile.MobileLua;
 #end
 
 class FunkinLua {
