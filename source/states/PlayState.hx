@@ -1151,7 +1151,7 @@ class PlayState extends MusicBeatState
 
 		var tempScore:String = 'Score: ${songScore}'
 		+ (!instakillOnMiss ? ' | Misses: ${songMisses}' : "")
-		+ ' | Rating: ${str}';
+		+ ' | Accuracy: ${str}';
 		// "tempScore" variable is used to prevent another memory leak, just in case
 		// "\n" here prevents the text from being cut off by beat zooms
 		scoreTxt.text = '${tempScore}\n';
@@ -1172,12 +1172,13 @@ class PlayState extends MusicBeatState
 		ratingFC = "";
 		if(songMisses == 0)
 		{
-			if (bads > 0 || shits > 0) ratingFC = 'FC';
+			if (shits > 0) ratingFC = 'FC';
+         else if (bads > 0) ratingFC = 'BFC';
 			else if (goods > 0) ratingFC = 'GFC';
 			else if (sicks > 0) ratingFC = 'SFC';
 		}
 		else {
-			if (songMisses < 10) ratingFC = 'SDCB';
+			if (songMisses < 10) ratingFC = 'SDBC';
 			else ratingFC = 'Clear';
 		}
 	}
