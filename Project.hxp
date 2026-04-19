@@ -4,7 +4,7 @@ var project = new Project();
 
 project.app.title = "Friday Night Funkin': Crazy Engine";
 project.app.file = "CrazyEngine";
-project.app.main = "Main";
+project.app.main = "backend.Main";
 project.app.packageName = "com.brenninho.psychengine";
 project.app.company = "Brenninho";
 project.app.version = "0.1.0";
